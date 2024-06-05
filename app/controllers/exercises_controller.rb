@@ -3,7 +3,7 @@ class ExercisesController < ApplicationController
     # 【要件】注文されていないすべての料理を返すこと
     #   * left_outer_joinsを使うこと
     # 注文されていないすべての料理＝order_foodsテーブルに存在していないfood_idをもったレコード
-    @foods = Food.left_outer_joins(:order_foods)
+    @foods = Food.left_outer_joins(:order_foods).where.missing(:order_foods)
   end
 
   def exercise2
