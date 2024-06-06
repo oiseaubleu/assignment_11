@@ -21,15 +21,6 @@ class ExercisesController < ApplicationController
     end
     @shops = Shop.left_outer_joins(:foods).where(id: no_order_shop_id).distinct
 
-    # SELECT shops.* FROM shops
-    # LEFT OUTER JOIN foods
-    # ON shops.id = foods.shop_id
-    # LEFT OUTER JOIN order_foods
-    # ON foods.id = order_foods.food_id
-    # WHERE order_foods.food_id IS NULL
-
-    #@shops = Shop.where.((Food.left_outer_joins(:order_foods).where.missing(:order_foods)).select(:shop_id))⇦これはだめ
-
   end
 
   def exercise3 
@@ -46,28 +37,6 @@ class ExercisesController < ApplicationController
     #   * joinsを使うこと
     #   * 取得したCustomerのインスタンスにfoods_price_sumと呼びかけると合計金額を返すこと
     @customer =   Customer.joins(orders: :foods).group("id").select("customers.*","sum(foods.price) as foods_price_sum").order(foods_price_sum: :desc).first
-
-
-  #   #与えられたorder_idのfood_idがほしい
-  #   select food_id from order_foods where order_foods.order_id == orders.order_id
-  #   #food_idの金額がほしい
-  #   select price from foods where order_foods.food_id == foods.food_id
-
-  #   ##ここから
-  #   test = Order.joins(order_foods: :food).group("id").select("orders.*","sum(foods.price) as foods_price_sum").distinct
-  #   test.first.foods_price_sum
-  #   test.where(id:2).first.foods_price_sum
-  #   ##ここまでOK
-
-
-  #   #testからorder_id 2のpriceがほしい ⇒order_idでグルーピングして合計を出す
-  #   test.where(id:2)
-  #   test.where(customer_id:5)[0].address_id
-
-
-  # Customer.joins(orders: :foods).group("id").select("customers.*","sum(foods.price) as foods_price_sum").order(foods_price_sum: :desc).first
-
-
 
   end
 end
