@@ -44,8 +44,8 @@ class ExercisesController < ApplicationController
     #sortするけどvalueでソートしたいのでsort_byつかう
   
 
-    max_address = Address.joins(:orders).group("id").count.sort_by{|k,v|v}.reverse[0]
-    @address = Address.joins(:orders).distinct.where(id:max_address[0])
+    max_address = Address.joins(:orders).where(addressable_type: "Customer").group("id").count.sort_by{|k,v|v}.reverse[0]
+    @address = Address.joins(:orders).where(addressable_type: "Customer").distinct.where(id:max_address[0]).first
   end
 
   def exercise4 
