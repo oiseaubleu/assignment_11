@@ -39,7 +39,8 @@ class ExercisesController < ApplicationController
     join_result  = Address.joins(:orders).where(addressable_type: "Customer")
     max_address = join_result.group("id").count.sort_by{|k,v|v}.reverse.first
     @address = join_result.group("id").select("addresses.*","count(orders.id) as orders_count").distinct.where(id:max_address[0]).first
-
+  end
+  
   def exercise4 
     # 【要件】一番お金を使っている顧客を返すこと
     #   * joinsを使うこと
