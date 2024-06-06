@@ -9,7 +9,11 @@ class ExercisesController < ApplicationController
   def exercise2
     # 【要件】注文されていない料理を提供しているすべてのお店を返すこと
     #   * left_outer_joinsを使うこと
-    @shops = Shop
+    # foodsのshop_idをもったお店をShopから引き抜く eager_load使いたいけど。。。
+    # shopsにfoods
+    no_order_foods_id =  Food.left_outer_joins(:order_foods).where.missing(:order_foods).select(:shop_id)
+    @shops = Shop.where(shop_id:no_order_foods_id)
+    #@shops = Shop.where.((Food.left_outer_joins(:order_foods).where.missing(:order_foods)).select(:shop_id))
   end
 
   def exercise3 
