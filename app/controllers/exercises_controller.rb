@@ -35,19 +35,10 @@ class ExercisesController < ApplicationController
   def exercise3 
     # 【要件】配達先の一番多い住所を返すこと
     #   * joinsを使うこと
-    #   * 取得したAddressのインスタンスにorders_countと呼びかけると注文の数を返すこと
-
-    # joinしたテーブルで最も多くあるAddress_idをもってきたい　⇒Address_idごとにカウントして一番多いもの
-    #GROUP BYしたい　⇒groupメソッドでグルーピングする
-    #グループごとのカウント　⇒ countでできる
-    #最大値をもってくる　⇒　having?maximumを使いたいと思ったけどよく考えたら大きい順にすればいいのかってことで
-    #sortするけどvalueでソートしたいのでsort_byつかう
-  
+    #   * 取得したAddressのインスタンスにorders_countと呼びかけると注文の数を返すこと  
     join_result  = Address.joins(:orders).where(addressable_type: "Customer")
-    max_address = join_result.group("id").count.sort_by{|k,v|v}.reverse[0]
-  
-    @address = join_result.distinct.where(id:max_address[0]).first
-  end
+    max_address = join_result.group("id").count.sort_by{|k,v|v}.reverse.first
+    @address = join_result.group("id").select("addresses.*","count(orders.id) as orders_count").distinct.where(id:max_address[0]).first
 
   def exercise4 
     # 【要件】一番お金を使っている顧客を返すこと
