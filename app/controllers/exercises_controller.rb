@@ -10,7 +10,8 @@ class ExercisesController < ApplicationController
     # 【要件】注文されていない料理を提供しているすべてのお店を返すこと
     #   * left_outer_joinsを使うこと
     # foodsのshop_idをもったお店をShopから引き抜く eager_load使いたいけど。。。
-    # shopsにfoods
+    # shopsにfoods外結する意味？？
+
     #注文していない商品のidとshop_id
     no_order_foods_shop_id =  Food.left_outer_joins(:order_foods).where.missing(:order_foods).select(:shop_id)
     #注文していない商品のshop_idのみ
@@ -35,7 +36,16 @@ class ExercisesController < ApplicationController
     # 【要件】配達先の一番多い住所を返すこと
     #   * joinsを使うこと
     #   * 取得したAddressのインスタンスにorders_countと呼びかけると注文の数を返すこと
-    @address = Address
+
+    # joinしたテーブルで最も多くあるAddress_idをもってきたい　⇒Address_idごとにカウントして一番多いもの
+    #GROUP BYしたい　⇒groupメソッドでグルーピングする
+    #グループごとのカウント　⇒ countでできる
+    #最大値をもってくる　⇒　having?maximumを使いたいと思ったけどよく考えたら大きい順にすればいいのかってことで
+    #sortするけどvalueでソートしたいのでsort_byつかう
+  
+
+    max_address = Address.joins(:orders).group("id").count.sort_by{|k,v|v}.reverse[0]
+    @address = Address.joins(:orders).distinct.where(id:max_address[0])
   end
 
   def exercise4 
