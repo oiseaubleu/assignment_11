@@ -12,7 +12,11 @@ class ExercisesController < ApplicationController
     # foodsのshop_idをもったお店をShopから引き抜く eager_load使いたいけど。。。
     # shopsにfoods
     no_order_foods_id =  Food.left_outer_joins(:order_foods).where.missing(:order_foods).select(:shop_id)
-    @shops = Shop.where(id:no_order_foods_id)
+    food_id =[]
+    no_order_foods_id.each do |id|
+      food_id.push(id.shop_id)
+    end
+    @shops = Shop.where(id: food_id)
 
     #@shops = Shop.where.((Food.left_outer_joins(:order_foods).where.missing(:order_foods)).select(:shop_id))
   end
