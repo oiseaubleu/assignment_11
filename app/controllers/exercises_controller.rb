@@ -43,9 +43,10 @@ class ExercisesController < ApplicationController
     #最大値をもってくる　⇒　having?maximumを使いたいと思ったけどよく考えたら大きい順にすればいいのかってことで
     #sortするけどvalueでソートしたいのでsort_byつかう
   
-
-    max_address = Address.joins(:orders).where(addressable_type: "Customer").group("id").count.sort_by{|k,v|v}.reverse[0]
-    @address = Address.joins(:orders).where(addressable_type: "Customer").distinct.where(id:max_address[0]).first
+    join_result  = Address.joins(:orders).where(addressable_type: "Customer")
+    max_address = join_result.group("id").count.sort_by{|k,v|v}.reverse[0]
+  
+    @address = join_result.distinct.where(id:max_address[0]).first
   end
 
   def exercise4 
