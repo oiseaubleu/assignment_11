@@ -40,11 +40,34 @@ class ExercisesController < ApplicationController
     max_address = join_result.group("id").count.sort_by{|k,v|v}.reverse.first
     @address = join_result.group("id").select("addresses.*","count(orders.id) as orders_count").distinct.where(id:max_address[0]).first
   end
-  
+
   def exercise4 
     # 【要件】一番お金を使っている顧客を返すこと
     #   * joinsを使うこと
     #   * 取得したCustomerのインスタンスにfoods_price_sumと呼びかけると合計金額を返すこと
-    @customer = Customer
+    @customer =   Customer.joins(orders: :foods).group("id").select("customers.*","sum(foods.price) as foods_price_sum").order(foods_price_sum: :desc).first
+
+
+  #   #与えられたorder_idのfood_idがほしい
+  #   select food_id from order_foods where order_foods.order_id == orders.order_id
+  #   #food_idの金額がほしい
+  #   select price from foods where order_foods.food_id == foods.food_id
+
+  #   ##ここから
+  #   test = Order.joins(order_foods: :food).group("id").select("orders.*","sum(foods.price) as foods_price_sum").distinct
+  #   test.first.foods_price_sum
+  #   test.where(id:2).first.foods_price_sum
+  #   ##ここまでOK
+
+
+  #   #testからorder_id 2のpriceがほしい ⇒order_idでグルーピングして合計を出す
+  #   test.where(id:2)
+  #   test.where(customer_id:5)[0].address_id
+
+
+  # Customer.joins(orders: :foods).group("id").select("customers.*","sum(foods.price) as foods_price_sum").order(foods_price_sum: :desc).first
+
+
+
   end
 end
