@@ -16,9 +16,17 @@ class ExercisesController < ApplicationController
     no_order_foods_id.each do |id|
       food_id.push(id.shop_id)
     end
-    @shops = Shop.where(id: food_id)
+    @shops = Shop.left_outer_joins(:foods).where(food_id: food_id)
 
-    #@shops = Shop.where.((Food.left_outer_joins(:order_foods).where.missing(:order_foods)).select(:shop_id))
+    # SELECT shops.* FROM shops
+    # LEFT OUTER JOIN foods
+    # ON shops.id = foods.shop_id
+    # LEFT OUTER JOIN order_foods
+    # ON foods.id = order_foods.food_id
+    # WHERE order_foods.food_id IS NULL
+
+    #@shops = Shop.where.((Food.left_outer_joins(:order_foods).where.missing(:order_foods)).select(:shop_id))⇦これはだめ
+
   end
 
   def exercise3 
